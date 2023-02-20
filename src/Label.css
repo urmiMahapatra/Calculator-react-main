@@ -1,0 +1,13 @@
+.Label {
+    background-color: rgb(190, 186, 186);
+    padding: 20px;
+    height: 60px;
+    font-size: 30px;
+    vertical-align: middle;
+    text-align: right;
+    margin-top: 2%;
+    border: 2px solid rgb(10, 10, 10);
+    border-radius: 5px;
+    padding: 5px;
+  
+  }
