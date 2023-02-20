@@ -17,7 +17,6 @@ class Button extends React.Component {
     }
 
     handleClick() {
-        console.log("PKS " + this.ButtonText);
         if (this.displayLabel == null) {
             this.displayLabel = document.getElementById("Display");
         }
@@ -64,7 +63,6 @@ class Button extends React.Component {
 
     handleNumber(ch) {
         let num = parseInt(ch);
-        console.log("PKS : " + num);
         if(newSet === true) {
             currNum = 0;
             newSet = false;
@@ -94,7 +92,6 @@ class Button extends React.Component {
     }
 
     calc(opr) {
-        console.log("PKS : " + prevNum + " "  + opr + " " + currNum);
         switch(opr) {
             case '+':
                 return (prevNum + currNum);
@@ -127,9 +124,3 @@ class Button extends React.Component {
 }
 
 export default Button;
-// OnClick(text) {
-// };
-
-// return (
-//   <div className="Button" onClick={this.OnClick(props.name)}>{props.name}</div>
-// );
