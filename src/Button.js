@@ -5,7 +5,11 @@ var prevNum = 0;
 var currNum = 0;
 var currOp = "";
 var prevOp = "";
+var curSign = 1;
+var decDigit = 0.0;
 var newSet = true;
+ var isFloat = false;
+//  var floatConv = 10;
 
 class Button extends React.Component {
     
@@ -40,11 +44,14 @@ class Button extends React.Component {
             case '9':
                 this.handleNumber(this.ButtonText);
             break;
+            case '%':
+            case '+/-':
             case '+':
             case '-':
             case '*':
             case '/':
             case '=':
+            case '.':
                 this.handleOperation(this.ButtonText);
             break;
             default:
@@ -55,9 +62,12 @@ class Button extends React.Component {
     resetStates() {
         prevNum = 0;
         currNum = 0;
+        curSign = 1;
         currOp = "";
         prevOp = "";
+        decDigit = 0.0;
         newSet = true;
+        isFloat = false;
         this.displayText(""+0);
     }
 
@@ -67,28 +77,59 @@ class Button extends React.Component {
             currNum = 0;
             newSet = false;
         }
-        currNum = (currNum * 10) + num;
+        console.log("new digit " + currNum);
+        if(isFloat == true) {
+            currNum = currNum + (curSign * num * decDigit);
+            decDigit =  decDigit * 0.1; 
+        } 
+        else {
+            currNum = (currNum * 10) + (curSign * num);
+        }
         this.displayText("" + currNum);
     }
 
     handleOperation(ch) {
         prevOp = currOp;
         currOp = ch;
-        newSet = true;
 
-        if(prevOp === "") {
+        if (currOp === '+/-') {
+            curSign = -1*curSign;
+            currNum = -1 * currNum;
+            currOp = "";
+            this.displayText("" + currNum);
+            newSet = false;
+            return;
+        }
+        else if (currOp === '.') {
+            currNum = (currNum * 1.0);
+            isFloat= true;
+            decDigit = 0.1;
+            currOp = "";
+            this.displayText(currNum + ".0");
+            return;
+         }
+         else if(prevOp === "") {
+            if(currOp == '-') {
+                curSign = -1*curSign;
+            }
             prevNum = currNum;
             currNum = 0;
+            decDigit = 0.0;
+            isFloat = false;
             this.displayText("" + prevNum);
-        } else if (currOp === '=') {
-            prevNum = this.calc(prevOp);
-            currNum = 0;
-            this.displayText("" + prevNum);
-        } else {
+        } 
+        else if (currOp === '=') {
             prevNum = this.calc(prevOp);
             currNum = 0;
             this.displayText("" + prevNum);
         }
+         else {
+            prevNum = this.calc(prevOp);
+            currNum = 0;
+            this.displayText("" + prevNum);
+        }
+        curSign = 1;
+        newSet = true;
     }
 
     calc(opr) {
@@ -101,6 +142,8 @@ class Button extends React.Component {
                 return (prevNum * currNum);
             case '/':
                 return (prevNum / currNum);
+            case '%':
+                    return ((prevNum + currNum)/100);
             default: 
                 return prevNum;
         }
