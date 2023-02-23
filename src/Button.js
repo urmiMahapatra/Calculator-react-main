@@ -8,14 +8,14 @@ var prevOp = "";
 var curSign = 1;
 var decDigit = 0.0;
 var newSet = true;
- var isFloat = false;
+var isFloat = false;
 
 
 class Button extends React.Component {
-    
+
     constructor(props) {
         super(props);
-        this.className="Button";
+        this.className = "Button";
         this.ButtonText = props.name;
         this.displayLabel = document.getElementById("Display");
     }
@@ -28,7 +28,7 @@ class Button extends React.Component {
     }
 
     handleButton() {
-        switch(this.ButtonText) {
+        switch (this.ButtonText) {
             case 'AC':
                 this.resetStates();
                 break;
@@ -43,21 +43,21 @@ class Button extends React.Component {
             case '8':
             case '9':
                 this.handleNumber(this.ButtonText);
-            break;
+                break;
             case '+/-':
             case '%':
             case '.':
                 this.handleUnary(this.ButtonText);
-            break;
+                break;
             case '+':
             case '-':
             case '*':
             case '/':
             case '=':
                 this.handleOperation(this.ButtonText);
-            break;
+                break;
             default:
-            break;
+                break;
         }
     }
 
@@ -70,20 +70,20 @@ class Button extends React.Component {
         decDigit = 0.0;
         newSet = true;
         isFloat = false;
-        this.displayText(""+0);
+        this.displayText("" + 0);
     }
 
     handleNumber(ch) {
         let num = parseInt(ch);
-        if(newSet === true) {
+        if (newSet === true) {
             currNum = 0;
             newSet = false;
         }
-      
-        if(isFloat == true) {
+
+        if (isFloat == true) {
             currNum = currNum + (curSign * num * decDigit);
-            decDigit =  decDigit * 0.1; 
-        } 
+            decDigit = decDigit * 0.1;
+        }
         else {
             currNum = (currNum * 10) + (curSign * num);
         }
@@ -92,23 +92,26 @@ class Button extends React.Component {
 
     handleUnary(ch) {
         if (ch === '+/-') {
-            curSign = -1*curSign;
-            console.log(curSign);
+            curSign = -1 * curSign;
             currNum = -1 * currNum;
             this.displayText("" + currNum);
             return;
         }
         else if (ch === '.') {
             currNum = (currNum * 1.0);
-            isFloat= true;
+            isFloat = true;
             decDigit = 0.1;
             this.displayText(currNum + ".0");
             return;
         }
         else if (ch === '%') {
-            currNum = (currNum*1.0) / 100;
-            isFloat= true;
-            this.displayText("" + currNum);
+
+            if (currOp === "") {
+                prevNum = this.calc(currOp);
+            }
+            prevNum = (currNum * 1.0) / 100;
+            currNum = 0
+            this.displayText("" + prevNum);
             return;
         }
     }
@@ -117,19 +120,19 @@ class Button extends React.Component {
         prevOp = currOp;
         currOp = ch;
 
-        if(prevOp === "") {
+        if (prevOp === "") {
             prevNum = currNum;
             currNum = 0;
             decDigit = 0.0;
             isFloat = false;
             this.displayText("" + prevNum);
-        } 
+        }
         else if (currOp === '=') {
             prevNum = this.calc(prevOp);
             currNum = 0;
             this.displayText("" + prevNum);
         }
-         else {
+        else {
             prevNum = this.calc(prevOp);
             currNum = 0;
             this.displayText("" + prevNum);
@@ -138,7 +141,7 @@ class Button extends React.Component {
     }
 
     calc(opr) {
-        switch(opr) {
+        switch (opr) {
             case '+':
                 return (prevNum + currNum);
             case '-':
@@ -147,7 +150,7 @@ class Button extends React.Component {
                 return (prevNum * currNum);
             case '/':
                 return (prevNum / currNum);
-            default: 
+            default:
                 return prevNum;
         }
     }
@@ -162,9 +165,9 @@ class Button extends React.Component {
         this.displayLabel.innerHTML = "";
     }
 
-    render() { 
+    render() {
         return (
-          <div className="Button" onClick={() => this.handleClick()}>{this.ButtonText}</div>
+            <div className="Button" onClick={() => this.handleClick()}>{this.ButtonText}</div>
         );
     }
 }
